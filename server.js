@@ -95,7 +95,7 @@ app.put( '/api/contacts/:id', function( req, res, next ) {
 } );
 
 app.delete( '/api/contacts/:id', function( req, res, next ) {
-  Contact.findByIdAndDelete( req.params.id, function( err ) {
+  Contact.findByIdAndRemove( req.params.id, function( err ) {
     if ( err ) {
       return handleError( res, err.message, 'Failed to delete contact' );
     }

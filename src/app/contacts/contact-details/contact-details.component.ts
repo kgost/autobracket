@@ -1,13 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Contact } from '../contact';
 import { ContactService } from '../contact.service';
 
 @Component({
-  selector: 'app-contact-details',
+  selector: 'contact-details',
   templateUrl: './contact-details.component.html',
   styleUrls: ['./contact-details.component.css']
 })
-export class ContactDetailsComponent implements OnInit {
+export class ContactDetailsComponent {
 	@Input()
 	contact: Contact;
 
@@ -36,8 +36,5 @@ export class ContactDetailsComponent implements OnInit {
   	this.contactService.deleteContact( contactId ).then( ( deletedContactId: String ) => {
   		this.deleteHandler( deletedContactId );
   	} );
-  }
-
-  ngOnInit() {
   }
 }
