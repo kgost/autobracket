@@ -10,6 +10,9 @@ app.use(bodyParser.json());
 var distDir = __dirname + '/dist/';
 app.use( express.static( distDir ) );
 
+// enable ejs
+app.set( 'view-engine', 'ejs' );
+
 // connect to mongodb server
 mongoose.connect( 'mongodb://localhost/contact_test' );
 
@@ -102,4 +105,9 @@ app.delete( '/api/contacts/:id', function( req, res, next ) {
 
     res.status( 200 ).json( req.params.id );
   } );
+} );
+
+// Angular Route
+app.use( function( req, res, next ) {
+  return res.render( 'index.ejs' );
 } );

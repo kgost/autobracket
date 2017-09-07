@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
+import { routing } from './app.routing';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
 
@@ -15,6 +16,7 @@ import { ContactListComponent } from './contacts/contact-list/contact-list.compo
   ],
   imports: [
     BrowserModule,
+    routing,
     FormsModule,
     HttpModule
   ],
