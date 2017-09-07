@@ -8,13 +8,16 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ng build"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^4.2.4",
+    "@angular/cli": "^1.3.0",
     "@angular/common": "^4.2.4",
     "@angular/compiler": "^4.2.4",
+    "@angular/compiler-cli": "^4.3.6",
     "@angular/core": "^4.2.4",
     "@angular/forms": "^4.2.4",
     "@angular/http": "^4.2.4",

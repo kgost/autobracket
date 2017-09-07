@@ -1,16 +1,20 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require( 'mongoose' );
-var Contact = require( '/models/contact' );
+var Contact = require( './models/contact' );
 
 var app = express();
 app.use(bodyParser.json());
+
+// Create link to Angular build directory
+var distDir = __dirname + '/dist/';
+app.use( express.static( distDir ) );
 
 // connect to mongodb server
 mongoose.connect( 'mongodb://localhost/contact_test' );
 
 // Initialize the app.
-var server = app.listen(process.env.PORT || 8080, function () {
+var server = app.listen(process.env.PORT || 3000, function () {
   var port = server.address().port;
   console.log("App now running on port", port);
 });
@@ -34,13 +38,14 @@ app.get( '/api/contacts', function( req, res, next ) {
     if ( err ) {
       return handleError( res, err.message, 'Failed to get contacts' );
     }
-    
+
     res.status( 200 ).json( contacts );
   } );
 } );
 
 app.post( '/api/contacts', function( req, res, next ) {
   var newContact = req.body;
+  newContact.createDate = new Date();
 
   if ( !req.body.name ) {
     return handleError( res, 'Invalid user input', "Must provide a name", 400 );
@@ -63,13 +68,38 @@ app.post( '/api/contacts', function( req, res, next ) {
  */
 
 app.get( '/api/contacts/:id', function( req, res, next ) {
-  
+  Contact.findById( req.params.id, function( err, contact ) {
+    if ( err ) {
+      return handleError( res, err.message, 'Failed to get contact' );
+    }
+
+    res.status( 200 ).json( contact );
+  } );
 } );
 
 app.put( '/api/contacts/:id', function( req, res, next ) {
-  
+  var updatedContact = req.body;
+  delete updatedContact._id;
+
+  if ( !req.body.name ) {
+    return handleError( res, 'Invalid user input', "Must provide a name", 400 );
+  }
+
+  Contact.findByIdAndUpdate( req.params.id, updatedContact, function( err, contact ) {
+    if ( err ) {
+      return handleError( res, err.message, 'Failed to update contact' );
+    }
+
+    res.status( 200 ).json( contact );
+  } );
 } );
 
 app.delete( '/api/contacts/:id', function( req, res, next ) {
-  
+  Contact.findByIdAndDelete( req.params.id, function( err ) {
+    if ( err ) {
+      return handleError( res, err.message, 'Failed to delete contact' );
+    }
+
+    res.status( 200 ).json( req.params.id );
+  } );
 } );
