@@ -1,7 +1,10 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var mongoose = require( 'mongoose' );
-var Contact = require( './models/contact' );
+var express     = require("express"),
+    bodyParser  = require("body-parser"),
+    mongoose    = require( 'mongoose' ),
+    bcrypt      = require( 'bcryptjs' ),
+    jwt         = require( 'jsonwebtoken' ),
+    Contact     = require( './models/contact' );
+    User        = require( './models/user' );
 
 var app = express();
 app.use(bodyParser.json());
@@ -104,6 +107,80 @@ app.delete( '/api/contacts/:id', function( req, res, next ) {
     }
 
     res.status( 200 ).json( req.params.id );
+  } );
+} );
+
+/*
+  /api/auth/signup
+  POST: create a new user, return their jwt
+ */
+
+app.post( '/api/auth/signup', function( req, res, next ) {
+  if ( !req.body ) {
+    return res.status( 500 ).json({
+      title: 'An error occured',
+      error: { message: 'No user to signup' }
+    });
+  }
+
+  var user = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: bcrypt.hashSync( req.body.password, 10 )
+  });
+  user.save( function( err, user ) {
+    if ( err ) {
+      return res.status( 500 ).json({
+        title: 'An error occured',
+        error: err
+      });
+    }
+    res.status( 201 ).json({
+      token: jwt.sign(
+        { user: user },
+        'my nama jeff',
+        { expiresIn: 7200 } ),
+      userId: user._id
+    });
+  } );
+} );
+
+/*
+  /api/auth/login
+  POST: authenticate user, return jwt
+ */
+
+app.post( '/api/auth/login', function( req, res, next ) {
+  if ( !req.body ) {
+    return res.status( 500 ).json({
+      title: 'An error occured',
+      error: { message: 'No user to login' }
+    });
+  }
+
+  User.findOne( { email: req.body.email }, function( err, user ) {
+    if ( err ) {
+      return res.status( 500 ).json({
+        title: 'An error occured',
+        error: err
+      });
+    }
+
+    if ( !user || !bcrypt.compareSync( req.body.password, user.password ) ) {
+      return res.status( 401 ).json({
+        title: 'Login Failed',
+        error: { message: 'Invalid login credentials' }
+      });
+    }
+
+    res.status( 201 ).json({
+      token: jwt.sign(
+        { user: user },
+        'my nama jeff',
+        { expiresIn: 7200 } ),
+      userId: user._id
+    });
   } );
 } );
 

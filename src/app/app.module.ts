@@ -7,12 +7,22 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 import { ContactDetailsComponent } from './contacts/contact-details/contact-details.component';
 import { ContactListComponent } from './contacts/contact-list/contact-list.component';
+import { AuthComponent } from './auth/auth.component';
+import { HeaderComponent } from './general/header/header.component';
+import { LandingComponent } from './general/landing/landing.component';
+import { AuthService } from './auth/auth.service';
+import { ErrorComponent } from './error/error.component';
+import { ErrorService } from './error/error.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContactDetailsComponent,
-    ContactListComponent
+    ContactListComponent,
+    AuthComponent,
+    HeaderComponent,
+    LandingComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -20,7 +30,7 @@ import { ContactListComponent } from './contacts/contact-list/contact-list.compo
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [AuthService, ErrorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
