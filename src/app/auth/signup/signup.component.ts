@@ -16,18 +16,6 @@ export class SignupComponent implements OnInit {
 
   constructor( private authService: AuthService, private router: Router ) { }
 
-  onSubmit() {
-  	const user = new User(
-  		this.myForm.value.email,
-  		this.myForm.value.password,
-  		this.myForm.value.firstName,
-  		this.myForm.value.lastName );
-
-  	this.authService.signup( user );
-
-  	this.myForm.reset();
-  }
-
   ngOnInit() {
   	this.myForm = new FormGroup({
   		firstName: new FormControl( null, Validators.required ),

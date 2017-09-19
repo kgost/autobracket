@@ -18,20 +18,17 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
   	const user = new User(
-  		this.myForm.value.email,
+  		this.myForm.value.username,
   		this.myForm.value.password );
 
   	this.authService.login( user );
-
+    this.router.navigate( ['/admin', 'tournaments'] );
   	this.myForm.reset();
   }
 
   ngOnInit() {
   	this.myForm = new FormGroup({
-  		email: new FormControl( null, [
-				Validators.required,
-				Validators.pattern( /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ )
-  		] ),
+  		username: new FormControl( null, Validators.required ),
   		password: new FormControl( null, Validators.required )
   	});
   }
