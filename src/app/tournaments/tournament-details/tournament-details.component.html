@@ -5,7 +5,7 @@
 		class="col-md-3 text-center">
 		<div class="match">
 			<h3>Setup {{ i + 1 }}</h3>
-			<p>{{ match.player1.name }} vs {{ match.player2.name }}</p>
+			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
 		</div>
 	</div>
