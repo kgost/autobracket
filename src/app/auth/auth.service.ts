@@ -44,7 +44,6 @@ export class AuthService {
 		var data = response.json();
 		localStorage.setItem( 'token', data.token );
 		localStorage.setItem( 'userId', data.userId );
-		this.router.navigateByUrl( '/contacts' );
 	}
 
 	private handleError( error: any ) {

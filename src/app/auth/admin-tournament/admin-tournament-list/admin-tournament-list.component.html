@@ -25,9 +25,17 @@
 		</form>
 		<ul class="list-group">
 			<li class="list-group-item"
-				*ngFor="let tournament of adminTournaments">
+				*ngFor="let tournament of adminTournaments"
+				(click)="selectTournament(tournament)">
 				{{tournament.name}}
 			</li>
 		</ul>
+		<admin-tournament-input
+			*ngIf="selectedTournament"
+			[tournament]="selectedTournament"
+			[startHandler]="startTournament"
+			[restartHandler]="restartTournament"
+			[auth]="auth">
+		</admin-tournament-input>
 	</div>
 </div>

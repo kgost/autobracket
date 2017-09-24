@@ -1,0 +1,10 @@
+<ul *ngIf="tournaments.length" class="list-group">
+	<div class="row">
+		<tournament-details
+			*ngFor="let tourny of tournaments"
+			[tournament]="tourny"
+			[updateHandler]="updateMatch"
+			[ngClass]="{'col-sm-12': tournaments.length == 1, 'col-sm-6': tournaments.length > 1}">
+		</tournament-details>
+	</div>
+</ul>

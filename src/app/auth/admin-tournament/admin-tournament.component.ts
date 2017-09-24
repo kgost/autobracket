@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-admin-tournament',
+  selector: 'admin-tournament',
   templateUrl: './admin-tournament.component.html',
   styleUrls: ['./admin-tournament.component.css']
 })

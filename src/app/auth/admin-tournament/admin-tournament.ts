@@ -1,5 +1,7 @@
 export class AdminTournament {
 	constructor( 
-		public username: string,
-		public key: string ) {}
+		public id: number,
+		public name: string,
+		public started: boolean,
+		public setups: string ) {}
 }

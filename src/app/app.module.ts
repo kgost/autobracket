@@ -1,4 +1,4 @@
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
@@ -13,6 +13,8 @@ import { LandingComponent } from './general/landing/landing.component';
 import { AuthService } from './auth/auth.service';
 import { ErrorComponent } from './error/error.component';
 import { ErrorService } from './error/error.service';
+import { TournamentListComponent } from './tournaments/tournament-list/tournament-list.component';
+import { TournamentDetailsComponent } from './tournaments/tournament-details/tournament-details.component';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,15 @@ import { ErrorService } from './error/error.service';
     AuthComponent,
     HeaderComponent,
     LandingComponent,
-    ErrorComponent
+    ErrorComponent,
+    TournamentListComponent,
+    TournamentDetailsComponent
   ],
   imports: [
     BrowserModule,
     routing,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule
   ],
   providers: [AuthService, ErrorService],
