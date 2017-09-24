@@ -5,6 +5,7 @@ var express     = require("express"),
 		jwt         = require( 'jsonwebtoken' ),
 		request     = require( 'request' ),
 		async     	= require( 'async' ),
+		path     		= require( 'path' ),
 		User        = require( './models/user' ),
 		Tournament  = require( './models/tournament' ),
 		Match  			= require( './models/match' ),
@@ -376,7 +377,7 @@ app.post( '/api/auth/login', function( req, res, next ) {
 
 // Angular Route
 app.use( function( req, res, next ) {
-	return res.render( 'index.ejs' );
+	res.sendFile(path.join(__dirname, './dist', 'index.html'));
 } );
 
 // generic error handler for api endpoints

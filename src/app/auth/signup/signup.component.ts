@@ -27,4 +27,8 @@ export class SignupComponent implements OnInit {
   		password: new FormControl( null, Validators.required )
   	});
   }
+
+  onSubmit() {
+    
+  }
 }

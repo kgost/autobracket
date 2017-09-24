@@ -7,8 +7,8 @@ import { ErrorService } from './error.service';
   styleUrls: ['./error.component.css']
 })
 export class ErrorComponent implements OnInit {
-	private error: string;
-	private display: string;
+	public error: string;
+	public display: string;
 
   constructor( private errorService: ErrorService ) { }
 
