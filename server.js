@@ -386,7 +386,6 @@ function handleError( res, reason, message, code ) {
 }
 
 function verifyJwt( req, res, next ) {
-	return next();
 	jwt.verify( req.query.token, 'my nama jeff', function( err, decoded ) {
 		if ( err ) {
 			return handleError( res, 'You must be logged in', 'Failed to verify jwt', 401 );
