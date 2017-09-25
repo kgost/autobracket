@@ -37,7 +37,26 @@ export class TournamentDetailsComponent implements OnInit {
   	this.match = match;
   }
 
+  stream( match: Match ) {
+  	for ( var i = 0; i < this.tournament.liveMatches.length; i ++ ) {
+  		if ( this.tournament.liveMatches[i]._id == match._id ) {
+  			this.tournamentService.moveToStream( match );
+	  		break;
+  		}
+  	}
+  }
+
+  unStream( match: Match ) {
+  	for ( var i = 0; i < this.tournament.streamMatches.length; i ++ ) {
+  		if ( this.tournament.streamMatches[i]._id == match._id ) {
+  			this.tournamentService.removeFromStream( match );
+	  		break;
+  		}
+  	}
+  }
+
   onSubmit() {
+  	this.myForm.reset();
   	if ( this.myForm.value.player1 !== this.myForm.value.player2 ) {
   		this.match.scores_csv = this.myForm.value.player1 + '-' + this.myForm.value.player2;
   		if ( this.myForm.value.player1 > this.myForm.value.player2 ) {

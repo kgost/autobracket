@@ -4,5 +4,8 @@ export class Tournament {
 	constructor( 
 		public id: number,
 		public name: string,
-		public liveMatches: Match[] ) {}
+		public url: string,
+		public streams: number,
+		public liveMatches: Match[],
+		public streamMatches: Match[] ) {}
 }

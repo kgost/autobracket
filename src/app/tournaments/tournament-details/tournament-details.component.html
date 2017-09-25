@@ -1,4 +1,16 @@
-<h1>{{ tournament.name }}</h1>
+<a [routerLink]="['/tournaments', tournament.url]"><h1>{{ tournament.name }}</h1></a>
+<div class="row">
+	<div 
+		*ngFor="let match of tournament.streamMatches; let i = index" 
+		class="col-md-3 text-center">
+		<div class="match">
+			<h3>Stream {{ i + 1 }}</h3>
+			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
+			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
+			<a *ngIf="isLoggedIn()" class="btn btn-warning" (click)="unStream(match)">Remove</a>
+		</div>
+	</div>
+</div>
 <div class="row">
 	<div 
 		*ngFor="let match of tournament.liveMatches; let i = index" 
@@ -7,6 +19,7 @@
 			<h3>Setup {{ i + 1 }}</h3>
 			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
+			<a *ngIf="isLoggedIn() && tournament.streamMatches.length < tournament.streams" class="btn btn-info" (click)="stream(match)">Stream</a>
 		</div>
 	</div>
 	<form

@@ -33,6 +33,98 @@ var server = app.listen(process.env.PORT || 3000, function () {
 
 // Tournament API ROUTES BELOW
 
+// move a match to stream
+app.post( '/api/tournaments/stream', verifyJwt, function( req, res, next ) {
+	if ( !req.body ) {
+		return handleError( res, 'No match sent', 'Invalid Match', 400 );
+	}
+
+	Tournament.findOne( { id: req.body.tournamentId } ).populate( 'matches' ).exec( function( err, tournament ) {
+		if ( err ) {
+			return handleError( res, 'Cannot find tournament', err.message, 400 );
+		}
+
+		if ( !tournament || !tournament.liveMatches ) {
+			return handleError( res, 'Cannot find tournament', 'Invalid Match', 400 );
+		}
+
+		if ( tournament.streamMatches.length >= tournament.streams ) {
+			return handleError( res, 'Too many streams', 'Streams are full already', 400 );
+		}
+
+		for ( var i = 0; i < tournament.liveMatches.length; i++ ) {
+			if ( tournament.liveMatches[i] == req.body._id ) {
+				tournament.streamMatches.push( tournament.liveMatches[i] );
+				tournament.liveMatches.splice( i, 1 );
+			}
+		}
+
+		for ( var j = 0; j < tournament.matches.length && tournament.liveMatches.length < tournament.setups; j++ ) {
+			if ( tournament.matches[j].toObject().player1 && tournament.matches[j].toObject().player2 ) {
+				tournament.liveMatches.push( tournament.matches[j] );
+				tournament.matches.splice( j, 1 );
+				j--;
+			}
+		}
+
+		tournament.save( function( err ) {
+			if ( err ) {
+				return handleError( res, 'Failed to save tournament', err.message );
+			}
+
+			res.redirect( '/api/tournaments' );
+		} );
+	} );
+} );
+
+// remove a match from stream
+app.delete( '/api/tournaments/stream/:id', verifyJwt, function( req, res, next ) {
+	if ( !req.params.id ) {
+		return handleError( res, 'No match sent', 'Invalid Match', 400 );
+	}
+
+	Match.findById( req.params.id, function( err, match ) {
+		if ( err ) {
+			return handleError( res, 'No match sent', 'Invalid Match', 400 );
+		}
+
+		if ( !match ) {
+			return handleError( res, 'No match sent', 'Invalid Match', 400 );
+		}
+
+		Tournament.findOne( { id: match.tournamentId }, function( err, tournament ) {
+			if ( err ) {
+				return handleError( res, 'Cannot find tournament', err.message, 400 );
+			}
+
+			if ( !tournament || !tournament.streamMatches || tournament.streamMatches.length < 1 ) {
+				return handleError( res, 'Cannot find tournament', 'Invalid Match', 400 );
+			}
+
+			for ( var i = 0; i < tournament.streamMatches.length; i++ ) {
+				if ( tournament.streamMatches[i].toString() == match._id.toString() ) {
+					tournament.liveMatches.unshift( tournament.streamMatches[i] );
+					tournament.streamMatches.splice( i, 1 );
+					if ( tournament.liveMatches.length > tournament.setups ) {
+						tournament.matches.unshift( tournament.liveMatches[tournament.liveMatches.length - 1] );
+						tournament.liveMatches.splice( tournament.liveMatches.length - 1, 1 );
+					}
+				}
+			}
+
+			tournament.save( function( err ) {
+				if ( err ) {
+					return handleError( res, 'Failed to save tournament', err.message );
+				}
+
+				req.method = 'GET';
+
+				res.redirect( 303, '/api/tournaments' );
+			} );
+		} );
+	} );
+} );
+
 // update tournament match
 app.post( '/api/tournaments/match', verifyJwt, function( req, res, next ) {
 	if ( !req.body ) {
@@ -159,7 +251,7 @@ app.post( '/api/tournaments/match', verifyJwt, function( req, res, next ) {
 // get all tournaments
 app.get( '/api/tournaments', function( req, res, next ) {
 	// get mongoose tournaments
-	Tournament.find({}).populate( 'liveMatches' ).exec( function( err, tournaments ) {
+	Tournament.find({}).populate( 'liveMatches' ).populate( 'streamMatches' ).exec( function( err, tournaments ) {
 		if ( err ) {
 			return handleError( res, 'Failed to get tournaments', err.message );
 		}
@@ -191,7 +283,11 @@ app.post( '/api/admin/getTournaments', verifyJwt, function( req, res, next ) {
 		var result = [];
 		body.forEach( function( item ) {
 			if ( item.tournament.state != 'pending' ) {
-				result.push( { id: item.tournament.id, name: item.tournament.name, game_name: item.tournament.game_name } );
+				result.push({
+					id: item.tournament.id, 
+					name: item.tournament.name, 
+					url: item.tournament.url
+				});
 			}
 		} );
 
@@ -311,22 +407,51 @@ app.post( '/api/admin/startTournament', verifyJwt, function( req, res, next ) {
 				}
 			}
 
-			Tournament.create( {
-				id: req.body.tournament.id,
-				name: req.body.tournament.name,
-				username: req.body.auth.username,
-				key: req.body.auth.key,
-				setups: req.body.tournament.setups,
-				matches: resultMatches,
-				liveMatches: liveMatches
-			}, function( err, tournament ) {
+			Tournament.findOne( { id: req.body.tournament.id }, function( err, tournament ) {
 				if ( err ) {
-					handleError( res, 'Failed to save tournament', err.message );
+					handleError( res, 'Failed to check for tournament', err.message );
 				}
 
-				// respond with success message
-				res.status( 200 ).json({ message: 'Tournament successfully created' });
-			} );
+				if ( tournament ) {
+					Tournament.findByIdAndUpdate( tournament._id, {
+						id: req.body.tournament.id,
+						name: req.body.tournament.name,
+						username: req.body.auth.username,
+						key: req.body.auth.key,
+						url: req.body.tournament.url,
+						setups: req.body.tournament.setups,
+						streams: req.body.tournament.streams,
+						matches: resultMatches,
+						liveMatches: liveMatches
+					}, function( err, tournament ) {
+						if ( err ) {
+							handleError( res, 'Failed to save tournament', err.message );
+						}
+
+						// respond with success message
+						res.status( 200 ).json({ message: 'Tournament successfully created' });
+					} );
+				} else {
+					Tournament.create( {
+						id: req.body.tournament.id,
+						name: req.body.tournament.name,
+						username: req.body.auth.username,
+						key: req.body.auth.key,
+						url: req.body.tournament.url,
+						setups: req.body.tournament.setups,
+						streams: req.body.tournament.streams,
+						matches: resultMatches,
+						liveMatches: liveMatches
+					}, function( err, tournament ) {
+						if ( err ) {
+							handleError( res, 'Failed to save tournament', err.message );
+						}
+
+						// respond with success message
+						res.status( 200 ).json({ message: 'Tournament successfully created' });
+					} );
+				}
+			} )
 		} );
 	} );
 } );
