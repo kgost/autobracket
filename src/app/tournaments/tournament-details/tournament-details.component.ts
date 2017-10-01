@@ -40,7 +40,7 @@ export class TournamentDetailsComponent implements OnInit {
   stream( match: Match ) {
   	for ( var i = 0; i < this.tournament.liveMatches.length; i ++ ) {
   		if ( this.tournament.liveMatches[i]._id == match._id ) {
-  			this.tournamentService.moveToStream( match );
+  			this.tournamentService.moveToStream( this.tournament._id, match._id );
 	  		break;
   		}
   	}
@@ -49,14 +49,13 @@ export class TournamentDetailsComponent implements OnInit {
   unStream( match: Match ) {
   	for ( var i = 0; i < this.tournament.streamMatches.length; i ++ ) {
   		if ( this.tournament.streamMatches[i]._id == match._id ) {
-  			this.tournamentService.removeFromStream( match );
+  			this.tournamentService.removeFromStream( this.tournament._id, match._id );
 	  		break;
   		}
   	}
   }
 
   onSubmit() {
-  	this.myForm.reset();
   	if ( this.myForm.value.player1 !== this.myForm.value.player2 ) {
   		this.match.scores_csv = this.myForm.value.player1 + '-' + this.myForm.value.player2;
   		if ( this.myForm.value.player1 > this.myForm.value.player2 ) {
@@ -64,7 +63,8 @@ export class TournamentDetailsComponent implements OnInit {
   		} else if ( this.myForm.value.player1 < this.myForm.value.player2 ) {
   			this.match.winner_id = this.match.player2.id;
   		}
-	  	this.tournamentService.updateMatch( this.match );
+	  	this.myForm.reset();
+	  	this.tournamentService.updateMatch( this.tournament._id, this.match );
   	}
   }
 

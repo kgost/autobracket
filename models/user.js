@@ -4,7 +4,13 @@ var mongoose 								= require( 'mongoose' ),
 
 var userSchema	= new Schema({
 	password: { type: String, required: true },
-	username: { type: String, required: true, unique: true }
+	username: { type: String, required: true, unique: true },
+	chlngUname: { type: String, required: true },
+	chlngKey: { type: String, required: true },
+	tournaments: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Tournament'
+	}]
 });
 
 userSchema.plugin( mongooseUniqueValidator );

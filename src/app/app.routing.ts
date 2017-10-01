@@ -8,8 +8,8 @@ import { BracketComponent } from './tournaments/bracket/bracket.component';
 const APP_ROUTES: Routes = [
 	{ path: '', component: LandingComponent },
 	{ path: 'admin', component: AuthComponent, loadChildren: './auth/auth.module#AuthModule' },
-	{ path: 'tournaments', component: TournamentListComponent, pathMatch: 'full' },
-	{ path: 'tournaments/:url', component: BracketComponent }
+	{ path: 'tournaments/:account', component: TournamentListComponent, pathMatch: 'full' },
+	{ path: 'brackets/:url', component: BracketComponent }
 ];
 
 export const routing = RouterModule.forRoot( APP_ROUTES );

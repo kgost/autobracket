@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 import { AuthService } from '../../auth/auth.service';
 import { TournamentService } from '../tournament.service';
@@ -13,16 +14,19 @@ import { Tournament } from '../tournament';
 })
 export class TournamentListComponent implements OnInit {
 	tournaments: Tournament[];
+	private sub: any;
 
-  constructor( private authService: AuthService, private tournamentService: TournamentService ) { }
+  constructor( private route: ActivatedRoute, private authService: AuthService, private tournamentService: TournamentService ) { }
 
   ngOnInit() {
-  	this.tournaments = this.tournamentService.tournamentsEdit.subscribe(
-  		( tournaments: Tournament[] ) => {
-  			this.tournaments = tournaments;
-  		}
-  	);
-  	this.tournamentService.getTournaments()
+  	this.sub = this.route.params.subscribe( params => {
+	  	this.tournaments = this.tournamentService.tournamentsEdit.subscribe(
+	  		( tournaments: Tournament[] ) => {
+					this.tournaments = tournaments;
+	  		}
+	  	);
+	  	this.tournamentService.getTournaments( params['account'] );
+  	} );
   }
 
   isLoggedIn() {

@@ -16,21 +16,18 @@ export class LoginComponent implements OnInit {
 
   constructor( private authService: AuthService, private router: Router ) { }
 
-  onSubmit() {
-  	const user = new User(
-  		this.myForm.value.username,
-  		this.myForm.value.password );
-
-  	this.authService.login( user );
-    this.router.navigate( ['/admin', 'tournaments'] );
-  	this.myForm.reset();
-  }
-
   ngOnInit() {
   	this.myForm = new FormGroup({
   		username: new FormControl( null, Validators.required ),
   		password: new FormControl( null, Validators.required )
   	});
   }
+  
+  onSubmit() {
+  	const user = new User(
+  		this.myForm.value.username,
+  		this.myForm.value.password );
 
+  	this.authService.login( user );
+  }
 }

@@ -4,8 +4,6 @@ var mongoose	= require( 'mongoose' ),
 var tournamentSchema = new Schema({
 	id: Number,
 	name: String,
-	username: String,
-	key: String,
 	url: String,
 	setups: Number,
 	streams: Number,
@@ -20,7 +18,8 @@ var tournamentSchema = new Schema({
 	streamMatches: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Match'
-	}]
+	}],
+	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 module.exports = mongoose.model( 'Tournament', tournamentSchema );

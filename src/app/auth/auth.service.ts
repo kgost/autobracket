@@ -18,7 +18,7 @@ export class AuthService {
 										.then( response => {
 											this.onSuccess( response );
 										} )
-										.catch( this.handleError );
+										.catch( error => this.handleError( error ) );
 	}
 
 	login( user: User ): Promise<void | any> {
@@ -27,9 +27,7 @@ export class AuthService {
 										.then( response => {
 											this.onSuccess( response );
 										} )
-										.catch( error => {
-											this.handleError( error );
-										} );
+										.catch( error => this.handleError( error ) );
 	}
 
 	logout() {
@@ -40,13 +38,18 @@ export class AuthService {
 		return !!( localStorage.token );
 	}
 
+	getUser() {
+		return localStorage.user;
+	}
+
 	private onSuccess( response: Response ) {
 		var data = response.json();
 		localStorage.setItem( 'token', data.token );
-		localStorage.setItem( 'userId', data.userId );
+		localStorage.setItem( 'user', data.user );
+		this.router.navigate( ['/admin', 'tournaments'] );
 	}
 
 	private handleError( error: any ) {
-		this.errorService.handleError( JSON.parse( error._body ).error.message );
+		this.errorService.handleError( JSON.parse( error._body ).error );
 	}
 }

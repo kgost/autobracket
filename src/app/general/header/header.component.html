@@ -14,9 +14,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
-        <li><a [routerLink]="['/tournaments']">Tournaments</a></li>
+        <li><a *ngIf="isLoggedIn()" [routerLink]="['/tournaments', getUser()]">Tournaments</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li *ngIf="!isLoggedIn()"><a [routerLink]="['/admin/signup']">Signup</a></li>
         <li *ngIf="!isLoggedIn()"><a [routerLink]="['/admin/login']">Login</a></li>
         <li *ngIf="isLoggedIn()"><a [routerLink]="['/admin/tournaments']">Admin Panel</a></li>
         <li *ngIf="isLoggedIn()"><a [routerLink]="['/admin/logout']">Logout</a></li>

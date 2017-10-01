@@ -6,7 +6,8 @@ import { LogoutComponent } from './logout/logout.component';
 import { AdminTournamentListComponent } from './admin-tournament/admin-tournament-list/admin-tournament-list.component';
 
 export const AUTH_ROUTES: Routes = [
-	{ path: '', redirectTo: 'login', pathMatch: 'full' },
+	{ path: '', redirectTo: 'signup', pathMatch: 'full' },
+	{ path: 'signup', component: SignupComponent },
 	{ path: 'login', component: LoginComponent },
 	{ path: 'logout', component: LogoutComponent },
 	{ path: 'tournaments', component: AdminTournamentListComponent }

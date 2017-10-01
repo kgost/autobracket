@@ -16,19 +16,23 @@ export class SignupComponent implements OnInit {
 
   constructor( private authService: AuthService, private router: Router ) { }
 
-  ngOnInit() {
-  	this.myForm = new FormGroup({
-  		firstName: new FormControl( null, Validators.required ),
-  		lastName: new FormControl( null, Validators.required ),
-  		email: new FormControl( null, [
-				Validators.required,
-				Validators.pattern( /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ )
-  		] ),
-  		password: new FormControl( null, Validators.required )
-  	});
-  }
+	ngOnInit() {
+		this.myForm = new FormGroup({
+			username: new FormControl( null, Validators.required ),
+			password: new FormControl( null, Validators.required ),
+			apiUser: new FormControl( null, Validators.required ),
+			apiKey: new FormControl( null, Validators.required ),
+		});
+	}
 
   onSubmit() {
-    
+		const user = new User(
+			this.myForm.value.username,
+			this.myForm.value.password,
+			this.myForm.value.apiUser,
+			this.myForm.value.apiKey
+		);
+
+		this.authService.signup( user );
   }
 }

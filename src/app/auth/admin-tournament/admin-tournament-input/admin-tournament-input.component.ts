@@ -33,15 +33,8 @@ export class AdminTournamentInputComponent implements OnInit {
   }
 
   onSubmit() {
-  	if ( !this.tournament.started ) {
-	  	this.tournament.setups = this.myForm.value.setups;
-	  	this.tournament.streams = this.myForm.value.streams;
-	  	this.startHandler( this.tournament, this.auth );
-  	} else {
-  		this.tournament.started = true;
-	  	this.tournament.setups = this.myForm.value.setups;
-	  	this.tournament.streams = this.myForm.value.streams;
-	  	this.restartHandler( this.tournament, this.auth );
-  	}
+  	this.tournament.setups = this.myForm.value.setups;
+  	this.tournament.streams = this.myForm.value.streams;
+  	this.startHandler( this.tournament );
   }
 }

@@ -6,7 +6,7 @@ export class ErrorService {
 
   constructor() { }
 
-  handleError( error: string ) {
+  handleError( error: any ) {
   	this.errorOccured.emit( error );
   }
 }

@@ -4,55 +4,53 @@ import 'rxjs/add/operator/toPromise';
 
 import { Tournament } from './tournament';
 import { Match } from './match';
+import { ErrorService } from '../error/error.service';
 
 @Injectable()
 export class TournamentService {
 	private tournamentUrl = '/api/tournaments';
 	tournamentsEdit = new EventEmitter<Tournament[]>();
 
-  constructor( private http: Http ) { }
+  constructor( private http: Http, private errorService: ErrorService ) { }
 
-  getTournaments(): Promise<void | Tournament[]> {
-  	return this.http.get( this.tournamentUrl )
+  getTournaments( account: string ): Promise<void | Tournament[]> {
+  	return this.http.get( this.tournamentUrl + '/' + account )
 										.toPromise()
 										.then( ( response: any ) => {
 											this.tournamentsEdit.emit( response.json() as Tournament[] );
 										} )
-										.catch( this.handleError );
+										.catch( error => this.handleError( error ) );
   }
 
-  updateMatch( match: Match ): Promise<void | Tournament[]> {
-  	return this.http.post( this.tournamentUrl + '/match' + this.getToken(), match )
+  updateMatch( tournamentId: string, match: Match ): Promise<void | Tournament[]> {
+  	return this.http.put( this.tournamentUrl + '/' + tournamentId + '/matches/' + match._id + this.getToken(), match )
 										.toPromise()
 										.then( ( response: any ) => {
 											this.tournamentsEdit.emit( response.json() as Tournament[] );
 										} )
-										.catch( this.handleError );
+										.catch( error => this.handleError( error ) );
   }
 
-  moveToStream( match: Match ): Promise<void | Tournament[]> {
-  	return this.http.post( this.tournamentUrl + '/stream' + this.getToken(), match )
+	moveToStream( tournamentId: string, matchId: string ): Promise<void | Tournament[]> {
+		return this.http.get( this.tournamentUrl + '/' + tournamentId + '/stream/' + matchId + this.getToken() )
 										.toPromise()
 										.then( ( response: any ) => {
 											this.tournamentsEdit.emit( response.json() as Tournament[] );
 										} )
-										.catch( this.handleError );
-  }
+										.catch( error => this.handleError( error ) );
+	}
 
-  removeFromStream( match: Match ): Promise<void | Tournament[]> {
-  	return this.http.delete( this.tournamentUrl + '/stream/' + match._id + this.getToken() )
+  removeFromStream( tournamentId: string, matchId: string ): Promise<void | Tournament[]> {
+  	return this.http.delete( this.tournamentUrl + '/' + tournamentId + '/stream/' + matchId + this.getToken() )
 										.toPromise()
 										.then( ( response: any ) => {
 											this.tournamentsEdit.emit( response.json() as Tournament[] );
 										} )
-										.catch( this.handleError );
+										.catch( error => this.handleError( error ) );
   }
 
   private handleError( error: any ) {
-  	console.log( error );
-  	let errMsg = ( error.message ) ? error.message : 
-  	error.status ? `${ error.status } - ${ error.statusText }` : 'Server error';
-  	console.log( errMsg );
+		this.errorService.handleError( JSON.parse( error._body ).error );
   }
 
   private getToken() {
