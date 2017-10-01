@@ -206,7 +206,14 @@ router.put( '/:id/matches/:mId', verifyJwt, function( req, res, next ) {
 							}
 						}
 
-						if ( tournament.liveMatches.length === 0 ) {
+						if ( tournament.liveMatches.length === 0 && tournament.streamMatches.length === 0 ) {
+							tournament.matches.forEach( function( match ) {
+								Match.findByIdAndRemove( match, function( err ) {
+									if ( err ) {
+										console.log( err );
+									}
+								} );
+							} );
 							Tournament.findByIdAndRemove( tournament._id, function( err ) {
 								if ( err ) {
 									return handleError( res, 'Failed to save tournament', err.message );
