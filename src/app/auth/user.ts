@@ -3,5 +3,6 @@ export class User {
 		public username: string,
 		public password: string,
 		public chlngUname?: string,
-		public chlngKey?: string ) {}
+		public chlngKey?: string,
+		public subDomain?: string ) {}
 }

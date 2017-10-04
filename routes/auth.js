@@ -15,11 +15,17 @@ router.post( '/signup', function( req, res, next ) {
 		return handleError( res, 'No user to signup', 'Invalid input', 400 );
 	}
 
+	var subDomains = [];
+
+	req.body.subDomain = req.body.subDomain.replace( / /g, '' );
+	subDomains = req.body.subDomain.split( ',' );
+
 	User.create( {
 		username: req.body.username,
 		password: bcrypt.hashSync( req.body.password, 10 ),
 		chlngUname: req.body.chlngUname,
-		chlngKey: req.body.chlngKey
+		chlngKey: req.body.chlngKey,
+		subDomains: subDomains
 	}, function( err, user ) {
 		if ( err ) {
 			return handleError( res, 'Failed to create user', err.message );

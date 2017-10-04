@@ -7,6 +7,7 @@ var userSchema	= new Schema({
 	username: { type: String, required: true, unique: true },
 	chlngUname: { type: String, required: true },
 	chlngKey: { type: String, required: true },
+	subDomains: [String],
 	tournaments: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Tournament'

@@ -22,6 +22,7 @@ export class SignupComponent implements OnInit {
 			password: new FormControl( null, Validators.required ),
 			apiUser: new FormControl( null, Validators.required ),
 			apiKey: new FormControl( null, Validators.required ),
+			subDomain: new FormControl(),
 		});
 	}
 
@@ -30,7 +31,8 @@ export class SignupComponent implements OnInit {
 			this.myForm.value.username,
 			this.myForm.value.password,
 			this.myForm.value.apiUser,
-			this.myForm.value.apiKey
+			this.myForm.value.apiKey,
+			this.myForm.value.subDomain
 		);
 
 		this.authService.signup( user );
