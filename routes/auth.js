@@ -22,7 +22,7 @@ router.post( '/signup', function( req, res, next ) {
 		chlngKey: req.body.chlngKey
 	}, function( err, user ) {
 		if ( err ) {
-			return handleError( res, 'Failed to create user', 'An error has occured' );
+			return handleError( res, 'Failed to create user', err.message );
 		}
 
 		res.redirect( 307, '/api/auth/login' );

@@ -38,8 +38,15 @@ export class TournamentDetailsComponent implements OnInit {
   }
 
   stream( match: Match ) {
-  	for ( var i = 0; i < this.tournament.liveMatches.length; i ++ ) {
-  		if ( this.tournament.liveMatches[i]._id == match._id ) {
+    for ( var i = 0; i < this.tournament.liveMatches.length; i ++ ) {
+      if ( this.tournament.liveMatches[i]._id == match._id ) {
+        this.tournamentService.moveToStream( this.tournament._id, match._id );
+        break;
+      }
+    }
+    
+  	for ( var i = 0; i < this.tournament.matches.length; i ++ ) {
+  		if ( this.tournament.matches[i]._id == match._id ) {
   			this.tournamentService.moveToStream( this.tournament._id, match._id );
 	  		break;
   		}

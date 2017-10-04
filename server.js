@@ -21,11 +21,11 @@ var distDir = __dirname + '/dist/';
 app.use( express.static( distDir ) );
 
 // connect to mongodb server
-mongoose.connect( 'mongodb://localhost/smash_club' );
+mongoose.connect( 'mongodb://localhost/auto_bracket' );
 
 app.use( '/api/auth', authRoutes );
-app.use( '/api/admin/tournaments', adminRoutes );
 app.use( '/api/tournaments', tournamentRoutes );
+app.use( '/api/admin/tournaments', adminRoutes );
 
 // Initialize the app
 var server = app.listen(process.env.PORT || 3000, function () {

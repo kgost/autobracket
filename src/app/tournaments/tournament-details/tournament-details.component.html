@@ -49,3 +49,14 @@
 			[disabled]="!myForm.valid">Submit</button>
 	</form>	
 </div>
+<div class="row">
+	<div 
+		*ngFor="let match of tournament.matches; let i = index" 
+		class="col-md-3 text-center">
+		<div class="match">
+			<h3>On Deck</h3>
+			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
+			<a *ngIf="isLoggedIn() && tournament.streamMatches.length < tournament.streams" class="btn btn-info" (click)="stream(match)">Stream</a>
+		</div>
+	</div>
+</div>

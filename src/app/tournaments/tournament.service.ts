@@ -26,6 +26,7 @@ export class TournamentService {
   	return this.http.put( this.tournamentUrl + '/' + tournamentId + '/matches/' + match._id + this.getToken(), match )
 										.toPromise()
 										.then( ( response: any ) => {
+											console.log( response );
 											this.tournamentsEdit.emit( response.json() as Tournament[] );
 										} )
 										.catch( error => this.handleError( error ) );
@@ -49,9 +50,9 @@ export class TournamentService {
 										.catch( error => this.handleError( error ) );
   }
 
-  private handleError( error: any ) {
+	private handleError( error: any ) {
 		this.errorService.handleError( JSON.parse( error._body ).error );
-  }
+	}
 
   private getToken() {
     const token = localStorage.getItem( 'token' ) ? 
