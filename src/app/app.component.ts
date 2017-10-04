@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+	public location = '';
+
+	constructor( private router: Router ) {}
+
+  ngOnInit() {
+    this.router.events.subscribe( ( val ) => this.location = this.router.url );
+  }
 }

@@ -16,6 +16,7 @@ import { ErrorService } from './error/error.service';
 import { TournamentListComponent } from './tournaments/tournament-list/tournament-list.component';
 import { TournamentDetailsComponent } from './tournaments/tournament-details/tournament-details.component';
 import { BracketComponent } from './tournaments/bracket/bracket.component';
+import { AboutComponent } from './general/about/about.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { BracketComponent } from './tournaments/bracket/bracket.component';
     ErrorComponent,
     TournamentListComponent,
     TournamentDetailsComponent,
-    BracketComponent
+    BracketComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

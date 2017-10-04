@@ -1,1 +1,2 @@
-.col-md-6 { padding: 0 5px; }
+.landing-header { margin-top: 120px; }
+.landing-background { width: 100%; height: 100%; position: absolute; z-index: 1; left: 0; top: 0; background-color: black; margin: 0; padding: 0; -webkit-background-size: cover; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat; background-image: url(http://i.imgur.com/K3mPv14.jpg); }
