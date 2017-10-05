@@ -13,7 +13,7 @@ import { Tournament } from '../tournament';
   providers: [TournamentService]
 })
 export class TournamentListComponent implements OnInit {
-	tournaments: Tournament[];
+	tournaments: Tournament[][];
 	private sub: any;
 
   constructor( private route: ActivatedRoute, private authService: AuthService, private tournamentService: TournamentService ) { }
@@ -22,7 +22,16 @@ export class TournamentListComponent implements OnInit {
   	this.sub = this.route.params.subscribe( params => {
 	  	this.tournaments = this.tournamentService.tournamentsEdit.subscribe(
 	  		( tournaments: Tournament[] ) => {
-					this.tournaments = tournaments;
+	  			var temp = [];
+	  			var tempTourns = [];
+					tournaments.forEach( function( tournament, index ) {
+						temp.push( tournament );
+						if ( index % 2 != 0 ) {
+							tempTourns.push( temp );
+							temp = [];
+						}
+					} );
+					this.tournaments = tempTourns;
 	  		}
 	  	);
 	  	this.tournamentService.getTournaments( params['account'] );

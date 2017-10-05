@@ -1,18 +1,28 @@
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-offset-2 col-md-8">
+		<h1>Your Tournaments</h1>
 		<ul class="list-group">
-			<li class="list-group-item"
+			<div
+				class="loader"
+				*ngIf="!adminTournaments"></div>
+			<div 
+				*ngIf="adminTournaments.length === 0"
+				class="jumbotron">
+				<h1>No Tournaments to Display</h1>
+			</div>
+			<li
+				class="list-group-item"
 				*ngFor="let tournament of adminTournaments"
 				(click)="selectTournament(tournament)">
 				{{tournament.name}}
+				<div *ngIf="tournament.started" class="pull-right"><em>started</em></div>
 			</li>
 		</ul>
 		<admin-tournament-input
-			*ngIf="selectedTournament"
+			*ngIf="selectedTournament != null"
 			[tournament]="selectedTournament"
 			[startHandler]="startTournament"
-			[restartHandler]="restartTournament"
-			[auth]="auth">
+			[restartHandler]="restartTournament">
 		</admin-tournament-input>
 	</div>
 </div>

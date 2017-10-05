@@ -187,7 +187,7 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 			return handleError( res, 'Failed to get tournaments', 'Invalid challonge credentials' );
 		}
 		body.forEach( function( item ) {
-			if ( item.tournament.state != 'pending' && item.tournament.state != 'ended' ) {
+			if ( item.tournament.state == 'underway' || item.tournament.state == 'awaiting_review' ) {
 				result.push({
 					id: item.tournament.id, 
 					name: item.tournament.name, 
@@ -210,7 +210,7 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 
 				var innerResults = [];
 				body.forEach( function( item ) {
-					if ( item.tournament.state != 'pending' && item.tournament.state != 'ended' ) {
+					if ( item.tournament.state == 'underway' || item.tournament.state == 'awaiting_review' ) {
 						innerResults.push({
 							id: item.tournament.id, 
 							name: item.tournament.name, 
@@ -231,7 +231,22 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 				} );
 			} );
 
-			res.status( 200 ).json( result );
+			async.map( result, function( tournament, callback ) {
+				Tournament.findOne( { id: tournament.id }, function( err, checkTournament ) {
+					if ( checkTournament ) {
+						tournament.started = true;
+					} else {
+						tournament.started = false;
+					}
+					callback( err );
+				} );
+			}, function( err, innerResults ) {
+				if ( err ) {
+					console.log( err );
+				}
+
+				res.status( 200 ).json( result );
+			} );
 		} );
 	} );
 } );

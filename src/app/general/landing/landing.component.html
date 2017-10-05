@@ -5,7 +5,18 @@
 		<h4>Simplify The Process of Running a Tournament With Auto Tourny.</h4>
 		<h4>Automatically Instruct Tournament Participants on Where to Go.</h4>
 		<a
+			*ngIf="!isLoggedIn()"
 			[routerLink]="['/about']"
 			class="btn btn-primary">Learn More</a>
+		<br>
+		<br>
+		<a
+			*ngIf="!isLoggedIn()"
+			[routerLink]="['/admin/login']"
+			class="btn btn-info">Login</a>
+		<a
+			*ngIf="isLoggedIn()"
+			[routerLink]="['/admin/tournaments']"
+			class="btn btn-primary">Start a Tournament</a>
 	</div>
 </div>

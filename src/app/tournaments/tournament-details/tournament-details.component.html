@@ -1,23 +1,27 @@
 <h1><a [routerLink]="['/brackets', tournament.url]">{{ tournament.name }}</a></h1>
-<div class="row">
+<div
+	*ngIf="tournament.streamMatches.length > 0"
+	class="row">
 	<div 
 		*ngFor="let match of tournament.streamMatches; let i = index" 
 		class="col-md-3 text-center">
 		<div class="match">
 			<h3>Stream {{ i + 1 }}</h3>
-			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
+			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
 			<a *ngIf="isLoggedIn()" class="btn btn-warning" (click)="unStream(match)">Remove</a>
 		</div>
 	</div>
 </div>
-<div class="row">
+<div
+	*ngIf="tournament.liveMatches.length > 0"
+	class="row">
 	<div 
 		*ngFor="let match of tournament.liveMatches; let i = index" 
 		class="col-md-3 text-center">
 		<div class="match">
 			<h3>Setup {{ i + 1 }}</h3>
-			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
+			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
 			<a *ngIf="isLoggedIn() && tournament.streamMatches.length < tournament.streams" class="btn btn-info" (click)="stream(match)">Stream</a>
 		</div>
@@ -49,13 +53,15 @@
 			[disabled]="!myForm.valid">Submit</button>
 	</form>	
 </div>
-<div class="row">
+<div 
+	*ngIf="tournament.matches.length > 0"
+	class="row">
 	<div 
 		*ngFor="let match of tournament.matches; let i = index" 
 		class="col-md-3 text-center">
 		<div class="match">
 			<h3>On Deck</h3>
-			<p><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></p>
+			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
 			<a *ngIf="isLoggedIn() && tournament.streamMatches.length < tournament.streams" class="btn btn-info" (click)="stream(match)">Stream</a>
 		</div>
 	</div>

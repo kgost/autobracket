@@ -28,7 +28,7 @@ export class AdminTournamentListComponent implements OnInit {
   	this.selectedTournament = tournament;
   }
 
-  startTournament( tournament: AdminTournament ) {
-  	this.adminTournamentService.startTournament( tournament );
-  }
+	startTournament( tournament: AdminTournament ) {
+		this.adminTournamentService.startTournament( tournament );
+	}
 }

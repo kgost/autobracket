@@ -280,12 +280,12 @@ router.get( '/:user', function( req, res, next ) {
 					} );
 					tournaments.splice( i, 1 );
 					i --;
-				}
-
-				for ( var j = 0; j < tournaments[i].matches.length; j++ ) {
-					if ( !tournaments[i].matches[j].toObject().player1 || !tournaments[i].matches[j].toObject().player2 ) {
-						tournaments[i].matches.splice( j, 1 );
-						j--;
+				} else {
+					for ( var j = 0; j < tournaments[i].matches.length; j++ ) {
+						if ( !tournaments[i].matches[j].toObject().player1 || !tournaments[i].matches[j].toObject().player2 ) {
+							tournaments[i].matches.splice( j, 1 );
+							j--;
+						}
 					}
 				}
 			}

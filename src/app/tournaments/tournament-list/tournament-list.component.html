@@ -4,9 +4,9 @@
 	<h1>No Tournaments to Display</h1>
 </div>
 <ul *ngIf="tournaments.length > 0" class="list-group">
-	<div class="row">
+	<div *ngFor="let tournamentGroup of tournaments" class="row">
 		<tournament-details
-			*ngFor="let tourny of tournaments"
+			*ngFor="let tourny of tournamentGroup"
 			[tournament]="tourny"
 			[updateHandler]="updateMatch"
 			[ngClass]="{'col-sm-12': tournaments.length == 1, 'col-sm-6': tournaments.length > 1}">

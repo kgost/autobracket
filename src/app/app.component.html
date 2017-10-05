@@ -1,12 +1,13 @@
 <app-header></app-header>
 <div class="container">
-  <app-error></app-error>
-  <app-response></app-response>
-  <router-outlet></router-outlet>
-  <div
+	<div class="col-md-11 col-lg-11">
+		<app-error></app-error>
+		<app-response></app-response>
+		<router-outlet></router-outlet>
+	</div>
+	<div
 		*ngIf="location != '/'"
-		class="container">
-  	<h4>You can get Gamecube Controllers Here</h4>
-  	<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=jpbland16-20&marketplace=amazon&region=US&placement=B00O9GW8TC&asins=B00O9GW8TC&linkId=d955fdb1d1a50aab151b0b908c6676e9&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>
-  </div>
+		class="col-md-1 col-lg-1">
+		<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=jpbland16-20&marketplace=amazon&region=US&placement=B00O9GW8TC&asins=B00O9GW8TC&linkId=d955fdb1d1a50aab151b0b908c6676e9&show_border=false&link_opens_in_new_window=true&price_color=333333&title_color=0066c0&bg_color=ffffff"></iframe>
+	</div>
 </div>
