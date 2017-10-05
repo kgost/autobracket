@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { ErrorService } from './error.service';
 
 @Component({
@@ -25,5 +26,4 @@ export class ErrorComponent implements OnInit {
 	  );
 	  this.display = 'none';
   }
-
 }

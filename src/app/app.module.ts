@@ -17,6 +17,8 @@ import { TournamentListComponent } from './tournaments/tournament-list/tournamen
 import { TournamentDetailsComponent } from './tournaments/tournament-details/tournament-details.component';
 import { BracketComponent } from './tournaments/bracket/bracket.component';
 import { AboutComponent } from './general/about/about.component';
+import { ResponseComponent } from './response/response.component';
+import { ResponseService } from './response/response.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { AboutComponent } from './general/about/about.component';
     TournamentListComponent,
     TournamentDetailsComponent,
     BracketComponent,
-    AboutComponent
+    AboutComponent,
+    ResponseComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,7 @@ import { AboutComponent } from './general/about/about.component';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [AuthService, ErrorService],
+  providers: [AuthService, ErrorService, ResponseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

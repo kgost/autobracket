@@ -125,7 +125,7 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 						}
 
 						// respond with success message
-						res.status( 200 ).json({ message: 'Tournament successfully created' });
+						res.status( 200 ).json({ message: 'Tournament successfully started' });
 					} );
 				} else {
 					Tournament.create( {
@@ -161,7 +161,7 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 								}
 
 								// respond with success message
-								res.status( 200 ).json({ message: 'Tournament successfully created' });
+								res.status( 200 ).json({ message: 'Tournament successfully started' });
 							} );
 						} );
 					} );
@@ -230,7 +230,6 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 					result.push( innerResult );
 				} );
 			} );
-			console.log( result );
 
 			res.status( 200 ).json( result );
 		} );

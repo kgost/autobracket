@@ -9,6 +9,7 @@ import { authRouting } from './auth.routing';
 import { AdminTournamentInputComponent } from './admin-tournament/admin-tournament-input/admin-tournament-input.component';
 import { AdminTournamentListComponent } from './admin-tournament/admin-tournament-list/admin-tournament-list.component';
 import { AdminTournamentComponent } from './admin-tournament/admin-tournament.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
 	declarations: [
@@ -17,7 +18,8 @@ import { AdminTournamentComponent } from './admin-tournament/admin-tournament.co
     LoginComponent,
     AdminTournamentInputComponent,
     AdminTournamentListComponent,
-    AdminTournamentComponent
+    AdminTournamentComponent,
+    SettingsComponent
 	],
 	imports: [
 		CommonModule,

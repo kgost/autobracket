@@ -9,6 +9,7 @@ var express 		= require( 'express' ),
 /*
 	/api/auth/signup
 	POST: authenticate user, return jwt
+	PUT: update user, return updated user
 */
 router.post( '/signup', function( req, res, next ) {
 	if ( !req.body ) {
@@ -17,7 +18,7 @@ router.post( '/signup', function( req, res, next ) {
 
 	var subDomains = [];
 
-	req.body.subDomain = req.body.subDomain.replace( / /g, '' );
+	req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
 	subDomains = req.body.subDomain.split( ',' );
 
 	User.create( {
@@ -35,6 +36,37 @@ router.post( '/signup', function( req, res, next ) {
 	} );
 } );
 
+router.put( '/signup', verifyJwt, function( req, res, next ) {
+	var user = jwt.decode( req.query.token ).user;
+	var subDomains = [];
+
+	if ( !req.body ) {
+		return handleError( res, 'No user to update', 'Invalid input', 400 );
+	}
+
+	req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
+	subDomains = req.body.subDomain.split( ',' );
+
+	user.chlngUname = req.body.chlngUname;
+	user.chlngKey = req.body.chlngKey;
+	user.subDomains = subDomains;
+
+	User.findByIdAndUpdate( user._id, user, function( err ) {
+		if ( err ) {
+			return handleError( res, 'Failed to create user', err.message );
+		}
+
+		res.status( 201 ).json({
+			token: jwt.sign(
+				{ user: user },
+				'my nama jeff',
+				{ expiresIn: 7200 } ),
+			user: user.username,
+			message: 'Settings Saved'
+		});
+	} );
+} );
+
 /*
 	/api/auth/login
 	POST: authenticate user, return jwt
@@ -45,7 +77,7 @@ router.post( '/login', function( req, res, next ) {
 		return handleError( res, 'No user to signup', 'Invalid input', 400 );
 	}
 
-	User.findOne( { username: req.body.username } ).populate( 'tournaments' ).exec( function( err, user ) {
+	User.findOne( { username: req.body.username }, function( err, user ) {
 		if ( err ) {
 			return handleError( res, 'Failed to find user', 'An error has occured' );
 		}
@@ -64,9 +96,39 @@ router.post( '/login', function( req, res, next ) {
 	} );
 } );
 
+router.get( '/', verifyJwt, function( req, res, next ) {
+	var user = jwt.decode( req.query.token ).user;
+	var subDomain = '';
+
+	user.username = null;
+	user.password = null;
+
+	for ( var i = 0; i < user.subDomains.length; i++ ) {
+		subDomain += user.subDomains[i];
+
+		if ( i != user.subDomains.length - 1 ) {
+			subDomain += ',';
+		}
+	}
+
+	user.subDomain = subDomain;
+
+	res.status( 200 ).json( user );
+} );
+
 function handleError( res, reason, message, code ) {
 	console.log( 'ERROR: ' + reason );
 	res.status( code || 500 ).json({ error: message });
+}
+
+function verifyJwt( req, res, next ) {
+	jwt.verify( req.query.token, 'my nama jeff', function( err, decoded ) {
+		if ( err ) {
+			return handleError( res, 'Failed to verify JWT', 'You must be logged in', 401 );
+		}
+
+		next();
+	} );
 }
 
 module.exports = router;

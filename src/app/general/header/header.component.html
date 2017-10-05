@@ -20,6 +20,7 @@
         <li *ngIf="!isLoggedIn()"><a [routerLink]="['/admin/signup']">Signup</a></li>
         <li *ngIf="!isLoggedIn()"><a [routerLink]="['/admin/login']">Login</a></li>
         <li *ngIf="isLoggedIn()"><a [routerLink]="['/admin/tournaments']">Admin Panel</a></li>
+        <li *ngIf="isLoggedIn()"><a [routerLink]="['/admin/settings']">Settings</a></li>
         <li *ngIf="isLoggedIn()"><a [routerLink]="['/admin/logout']">Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
