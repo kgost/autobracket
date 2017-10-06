@@ -31,6 +31,7 @@ export class TournamentListComponent implements OnInit {
 							temp = [];
 						}
 					} );
+					tempTourns.push( temp );
 					this.tournaments = tempTourns;
 	  		}
 	  	);
