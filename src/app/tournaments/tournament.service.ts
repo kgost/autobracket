@@ -54,10 +54,10 @@ export class TournamentService {
 		this.errorService.handleError( JSON.parse( error._body ).error );
 	}
 
-  private getToken() {
-    const token = localStorage.getItem( 'token' ) ? 
-                  '?token=' + localStorage.getItem( 'token' ) :
-                  '';
-    return token;
-  }
+	private getToken() {
+		const token = localStorage.getItem( 'token' ) ? 
+									'?token=' + localStorage.getItem( 'token' ) :
+									'';
+		return token;
+	}
 }
