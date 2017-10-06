@@ -6,7 +6,7 @@
 				class="loader"
 				*ngIf="!adminTournaments"></div>
 			<div 
-				*ngIf="adminTournaments.length === 0"
+				*ngIf="adminTournaments && adminTournaments.length === 0"
 				class="jumbotron">
 				<h1>No Tournaments to Display</h1>
 			</div>
