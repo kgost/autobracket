@@ -81,5 +81,8 @@ export class AuthService {
 
 	private handleError( error: any ) {
 		this.errorService.handleError( JSON.parse( error._body ).error );
+		if ( error.status == 400 || error.status == 400 ) {
+			this.router.navigateByUrl( '/admin/login' );
+		}
 	}
 }

@@ -1,9 +1,9 @@
 <div 
-	*ngIf="tournaments && tournaments.length === 0"
+	*ngIf="!tournaments || (tournaments && tournaments.length === 0)"
 	class="jumbotron">
 	<h1>No Tournaments to Display</h1>
 </div>
-<ul *ngIf="tournaments.length > 0" class="list-group">
+<ul *ngIf="tournaments && tournaments.length > 0" class="list-group">
 	<div *ngFor="let tournamentGroup of tournaments" class="row">
 		<tournament-details
 			*ngFor="let tourny of tournamentGroup"

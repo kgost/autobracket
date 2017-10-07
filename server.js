@@ -1,7 +1,5 @@
 var express     			= require("express"),
 		app								= express(),
-		http							= require( 'http' ).Server( app ),
-		io								= require( 'socket.io' )( http ),
 		bodyParser  			= require("body-parser"),
 		mongoose    			= require( 'mongoose' ),
 		bcrypt      			= require( 'bcryptjs' ),
@@ -14,7 +12,8 @@ var express     			= require("express"),
 		Match  						= require( './models/match' ),
 		authRoutes				= require( './routes/auth' ),
 		adminRoutes				= require( './routes/admin' ),
-		tournamentRoutes	= require( './routes/tournaments' );
+		tournamentRoutes	= require( './routes/tournaments' ),
+		io;
 
 var app = express();
 app.use(bodyParser.json());
@@ -26,6 +25,13 @@ app.use( express.static( distDir ) );
 // connect to mongodb server
 mongoose.connect( 'mongodb://localhost/auto_bracket' );
 
+// Put Socket Into Req
+app.use( function( req, res, next ) {
+	req.io = io;
+	next();
+} );
+
+// Import Routes
 app.use( '/api/auth', authRoutes );
 app.use( '/api/tournaments', tournamentRoutes );
 app.use( '/api/admin/tournaments', adminRoutes );
@@ -35,8 +41,11 @@ app.use( function( req, res, next ) {
 	res.sendFile(path.join(__dirname, './dist', 'index.html'));
 } );
 
+var http = require( 'http' ).Server( app );
+var io = require( 'socket.io' )( http );
+
 // Initialize the app
 http.listen(process.env.PORT || 3000, function () {
-	var port = server.address().port;
+	var port = http.address().port;
 	console.log("App now running on port", port);
 });

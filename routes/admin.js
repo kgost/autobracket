@@ -12,6 +12,7 @@ var express 		= require( 'express' ),
 
 // Start tournament
 router.post( '/:chlId', verifyJwt, function( req, res, next ) {
+	console.log( 'start' );
 	var user = jwt.decode( req.query.token ).user;
 	var matches = [];
 	var liveMatches = [];
@@ -118,13 +119,8 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 							return handleError( res, 'Failed to save tournament', err.message );
 						}
 
-						if ( req.goTo ) {
-							req.method = 'GET';
-
-							return res.redirect( 303, '/api/tournaments/' + user.username );
-						}
-
 						// respond with success message
+						emitTournaments( req, user.username );
 						res.status( 200 ).json({ message: 'Tournament successfully started' });
 					} );
 				} else {
@@ -154,13 +150,8 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 									return handleError( res, 'Failed to save user', 'Error saving user' );
 								}
 
-								if ( req.goTo ) {
-									req.method = 'GET';
-
-									return res.redirect( 303, '/api/tournaments/' + user.username );
-								}
-
 								// respond with success message
+								emitTournaments( req, user.username );
 								res.status( 200 ).json({ message: 'Tournament successfully started' });
 							} );
 						} );
@@ -250,6 +241,42 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 		} );
 	} );
 } );
+
+function emitTournaments( req, username ) {
+	User.findOne( { username: username }, function( err, user ) {
+		if ( err || !user ) {
+			return;
+		}
+
+		// get mongoose tournaments
+		Tournament.find( { user: user._id } ).populate( 'liveMatches' ).populate( 'streamMatches' ).populate( 'matches' ).exec( function( err, tournaments ) {
+			if ( err ) {
+				return;
+			}
+
+			for ( var i = 0; i < tournaments.length; i++ ) {
+				if ( tournaments[i].matches.length === 0 && tournaments[i].liveMatches.length === 0 && tournaments[i].streamMatches.length === 0 ) {
+					Tournament.findByIdAndRemove( tournaments[i]._id, function( err ) {
+						if ( err ) {
+							console.log( err );
+						}
+					} );
+					tournaments.splice( i, 1 );
+					i --;
+				} else {
+					for ( var j = 0; j < tournaments[i].matches.length; j++ ) {
+						if ( !tournaments[i].matches[j].toObject().player1 || !tournaments[i].matches[j].toObject().player2 ) {
+							tournaments[i].matches.splice( j, 1 );
+							j--;
+						}
+					}
+				}
+			}
+
+			req.io.sockets.emit( 'tournaments-' + username, tournaments );
+		} );
+	} );
+}
 
 function handleError( res, reason, message, code ) {
 	console.log( 'ERROR: ' + reason );

@@ -19,6 +19,7 @@ import { BracketComponent } from './tournaments/bracket/bracket.component';
 import { AboutComponent } from './general/about/about.component';
 import { ResponseComponent } from './response/response.component';
 import { ResponseService } from './response/response.service';
+import { MainService } from './general/main.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,7 @@ import { ResponseService } from './response/response.service';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [AuthService, ErrorService, ResponseService],
+  providers: [MainService, AuthService, ErrorService, ResponseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

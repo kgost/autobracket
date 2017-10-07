@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import { ErrorService } from '../../error/error.service';
-import { ResponseService } from '../../response/response.service';
+import { MainService } from '../../general/main.service';
 import { ChallongeAuth } from './challonge-auth';
 import { AdminTournament } from './admin-tournament';
 
@@ -12,7 +11,7 @@ import { AdminTournament } from './admin-tournament';
 export class AdminTournamentService {
 	private adminUrl = '/api/admin/tournaments';
 
-  constructor( private responseService: ResponseService, private http: Http, private errorService: ErrorService ) { }
+  constructor( private mainService: MainService, private http: Http ) { }
 
 	getTournaments(): Promise<void | AdminTournament[]> {
 		return this.http.get( this.adminUrl + this.getToken() )
@@ -31,11 +30,11 @@ export class AdminTournamentService {
 	}
 
 	private handleResponse( response: any ) {
-		this.responseService.handleResponse( JSON.parse( response._body ).message );
+		this.mainService.handleResponse( response );
 	}
 
   private handleError( error: any ) {
-		this.errorService.handleError( JSON.parse( error._body ).error );
+		this.mainService.handleError( error );
   }
 
   private getToken() {

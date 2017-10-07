@@ -21,8 +21,6 @@ export class TournamentDetailsComponent implements OnInit {
 
 	@Input()
 	updateHandler: Function;
-	@Input()
-	selectHandler: Function;
 
   constructor( private authService: AuthService, private tournamentService: TournamentService ) { }
 
