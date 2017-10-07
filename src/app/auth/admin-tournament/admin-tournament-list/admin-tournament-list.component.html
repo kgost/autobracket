@@ -11,9 +11,10 @@
 				<h1>No Tournaments to Display</h1>
 			</div>
 			<li
-				class="list-group-item"
 				*ngFor="let tournament of adminTournaments"
-				(click)="selectTournament(tournament)">
+				(click)="selectTournament(tournament)"
+				[ngClass]="{'active': tournament == selectedTournament}"
+				class="list-group-item">
 				{{tournament.name}}
 				<div *ngIf="tournament.started" class="pull-right"><em>started</em></div>
 			</li>

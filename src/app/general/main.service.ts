@@ -11,7 +11,7 @@ export class MainService {
 
 	handleError( error: any ) {
 		this.errorService.handleError( error );
-		if ( error.status == 400 || error.status == 401 ) {
+		if ( error.status == 401 ) {
 			this.authService.logout();
 			this.router.navigateByUrl( '/admin/login' );
 		}

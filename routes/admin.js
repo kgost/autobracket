@@ -12,7 +12,6 @@ var express 		= require( 'express' ),
 
 // Start tournament
 router.post( '/:chlId', verifyJwt, function( req, res, next ) {
-	console.log( 'start' );
 	var user = jwt.decode( req.query.token ).user;
 	var matches = [];
 	var liveMatches = [];
@@ -75,6 +74,10 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 					resultMatches.splice( i, 1 );
 					i--;
 				}
+			}
+
+			if ( liveMatches.length === 0 ) {
+				return handleError( res, 'Found Finished Tournament', 'No matches left for ' + req.body.name + '. Mark tournament as finished or reopen matches in challonge', 400 );
 			}
 
 			Tournament.findOne( { id: req.params.chlId }, function( err, tournament ) {
@@ -256,24 +259,52 @@ function emitTournaments( req, username ) {
 
 			for ( var i = 0; i < tournaments.length; i++ ) {
 				if ( tournaments[i].matches.length === 0 && tournaments[i].liveMatches.length === 0 && tournaments[i].streamMatches.length === 0 ) {
-					Tournament.findByIdAndRemove( tournaments[i]._id, function( err ) {
-						if ( err ) {
-							console.log( err );
-						}
-					} );
+					removeTournament( tournaments[i]._id.toString(), user._id.toString() );
 					tournaments.splice( i, 1 );
 					i --;
 				} else {
-					for ( var j = 0; j < tournaments[i].matches.length; j++ ) {
-						if ( !tournaments[i].matches[j].toObject().player1 || !tournaments[i].matches[j].toObject().player2 ) {
-							tournaments[i].matches.splice( j, 1 );
-							j--;
+					for ( var k = 0; k < tournaments[i].matches.length; k++ ) {
+						if ( !tournaments[i].matches[k].toObject().player1 || !tournaments[i].matches[k].toObject().player2 ) {
+							tournaments[i].matches.splice( k, 1 );
+							k--;
 						}
 					}
 				}
 			}
 
 			req.io.sockets.emit( 'tournaments-' + username, tournaments );
+		} );
+	} );
+}
+
+function removeTournament( tournamentId, userId ) {
+	User.findById( userId, function( err, user ) {
+		for ( var i = 0; i < user.tournaments.length; i++ ) {
+			if ( user.tournaments[i].toString() == tournamentId ) {
+				user.tournaments.splice( i, 1 );
+				user.save();
+				break;
+			}
+		}
+
+		Tournament.findById( tournamentId, function( err, tournament ) {
+			if ( err ) {
+				console.log( err );
+			}
+
+			if ( !tournament ) {
+				return;
+			}
+
+			tournament.matches.forEach( function( match ) {
+				Match.findByIdAndRemove( match, function( err ) {
+					if ( err ) {
+						console.log( err );
+					}
+				} );
+			} );
+
+			tournament.remove();
 		} );
 	} );
 }

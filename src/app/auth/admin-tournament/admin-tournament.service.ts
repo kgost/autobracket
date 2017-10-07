@@ -25,6 +25,7 @@ export class AdminTournamentService {
 										.toPromise()
 										.then( response => {
 											this.handleResponse( response );
+											tournament.started = true;
 										} )
 										.catch( error => this.handleError( error ) );
 	}
