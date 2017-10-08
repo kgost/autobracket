@@ -4,7 +4,7 @@
 	class="row">
 	<div 
 		*ngFor="let match of tournament.streamMatches; let i = index" 
-		class="col-md-3 text-center">
+		class="col-md-3 col-lg-3 text-center">
 		<div class="match">
 			<h3>Stream {{ i + 1 }}</h3>
 			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
@@ -18,7 +18,7 @@
 	class="row">
 	<div 
 		*ngFor="let match of tournament.liveMatches; let i = index" 
-		class="col-md-3 text-center">
+		class="col-md-3 col-lg-3 text-center">
 		<div class="match">
 			<h3>Setup {{ i + 1 }}</h3>
 			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
@@ -58,7 +58,7 @@
 	class="row">
 	<div 
 		*ngFor="let match of tournament.matches; let i = index" 
-		class="col-md-3 text-center">
+		class="col-md-3 col-lg-3 text-center">
 		<div class="match">
 			<h3>On Deck</h3>
 			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>

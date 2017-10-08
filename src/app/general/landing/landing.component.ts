@@ -16,4 +16,8 @@ export class LandingComponent implements OnInit {
   isLoggedIn() {
     return this.authService.isLoggedIn();
   }
+
+  getUser() {
+    return this.authService.getUser();
+  }
 }
