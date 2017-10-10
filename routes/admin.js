@@ -15,7 +15,7 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 	var user = jwt.decode( req.query.token ).user;
 	var matches = [];
 	var liveMatches = [];
-	var slices = [];
+	var pos = 0;
 
 	// get starting matches
 	request( 'https://' + user.chlngUname + ':' + user.chlngKey + '@api.challonge.com/v1/tournaments/' + req.params.chlId + '/matches.json', function( err, response, body ) {
@@ -69,8 +69,8 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 
 			for ( var i = 0; i < resultMatches.length && liveMatches.length < req.body.setups; i++ ) {
 				if ( resultMatches[i].toObject().player1 && resultMatches[i].toObject().player2 ) {
-					liveMatches.push( resultMatches[i] );
-					slices.push( i );
+					liveMatches.push( { pos: pos, match: resultMatches[i] } );
+					pos++;
 					resultMatches.splice( i, 1 );
 					i--;
 				}
@@ -87,21 +87,21 @@ router.post( '/:chlId', verifyJwt, function( req, res, next ) {
 
 				if ( tournament ) {
 					tournament.matches.forEach( function( match ) {
-						Match.findByIdAndRemove( match, function( err ) {
+						Match.findByIdAndRemove( match.match, function( err ) {
 							if ( err ) {
 								console.log( err );
 							}
 						} );
 					} );
 					tournament.liveMatches.forEach( function( match ) {
-						Match.findByIdAndRemove( match, function( err ) {
+						Match.findByIdAndRemove( match.match, function( err ) {
 							if ( err ) {
 								console.log( err );
 							}
 						} );
 					} );
 					tournament.streamMatches.forEach( function( match ) {
-						Match.findByIdAndRemove( match, function( err ) {
+						Match.findByIdAndRemove( match.match, function( err ) {
 							if ( err ) {
 								console.log( err );
 							}
@@ -246,13 +246,15 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 } );
 
 function emitTournaments( req, username ) {
+	var result = [];
+
 	User.findOne( { username: username }, function( err, user ) {
 		if ( err || !user ) {
 			return;
 		}
 
 		// get mongoose tournaments
-		Tournament.find( { user: user._id } ).populate( 'liveMatches' ).populate( 'streamMatches' ).populate( 'matches' ).exec( function( err, tournaments ) {
+		Tournament.find( { user: user._id } ).populate( 'liveMatches.match' ).populate( 'streamMatches.match' ).populate( 'matches' ).exec( function( err, tournaments ) {
 			if ( err ) {
 				return;
 			}
@@ -263,16 +265,60 @@ function emitTournaments( req, username ) {
 					tournaments.splice( i, 1 );
 					i --;
 				} else {
-					for ( var k = 0; k < tournaments[i].matches.length; k++ ) {
-						if ( !tournaments[i].matches[k].toObject().player1 || !tournaments[i].matches[k].toObject().player2 ) {
-							tournaments[i].matches.splice( k, 1 );
-							k--;
+					result.push({
+						_id: tournaments[i]._id,
+						id: tournaments[i].id,
+						name: tournaments[i].name,
+						url: tournaments[i].url,
+						streams: tournaments[i].streams,
+						matches: [],
+						liveMatches: [],
+						streamMatches: []
+					});
+
+					for ( var j = 0; j < tournaments[i].matches.length; j++ ) {
+						if ( tournaments[i].matches[j].toObject().player1 && tournaments[i].matches[j].toObject().player2 ) {
+							result[i].matches.push( tournaments[i].matches[j] );
 						}
+					}
+
+					tournaments[i].liveMatches.sort( function( a, b ) {
+						return a.pos - b.pos;
+					} );
+
+					tournaments[i].streamMatches.sort( function( a, b ) {
+						return a.pos - b.pos;
+					} );
+
+					for ( var k = 0; k < tournaments[i].liveMatches.length; k++ ) {
+						result[i].liveMatches.push({
+							_id: tournaments[i].liveMatches[k].match._id,
+							tournamentId: tournaments[i].liveMatches[k].match.tournamentId,
+							id: tournaments[i].liveMatches[k].match.id,
+							pos: tournaments[i].liveMatches[k].pos,
+							player1: tournaments[i].liveMatches[k].match.player1,
+							player2: tournaments[i].liveMatches[k].match.player2,
+							winner_id: tournaments[i].liveMatches[k].match.winner_id,
+							scores_csv: tournaments[i].liveMatches[k].match.scores_csv
+						});
+					}
+
+					for ( var l = 0; l < tournaments[i].streamMatches.length; l++ ) {
+						result[i].streamMatches.push({
+							_id: tournaments[i].streamMatches[l].match._id,
+							tournamentId: tournaments[i].streamMatches[l].match.tournamentId,
+							id: tournaments[i].streamMatches[l].match.id,
+							pos: tournaments[i].streamMatches[l].pos,
+							player1: tournaments[i].streamMatches[l].match.player1,
+							player2: tournaments[i].streamMatches[l].match.player2,
+							winner_id: tournaments[i].streamMatches[l].match.winner_id,
+							scores_csv: tournaments[i].streamMatches[l].match.scores_csv
+						});
 					}
 				}
 			}
 
-			req.io.sockets.emit( 'tournaments-' + username, tournaments );
+			req.io.sockets.emit( 'tournaments-' + username, result );
 		} );
 	} );
 }

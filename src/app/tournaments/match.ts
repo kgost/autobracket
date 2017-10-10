@@ -3,6 +3,7 @@ export class Match {
 		public _id: string,
 		public tournamentId: number,
 		public id: number,
+		public pos: number,
 		public player1: {
 			id: number,
 			name: string

@@ -18,8 +18,10 @@ router.post( '/signup', function( req, res, next ) {
 
 	var subDomains = [];
 
-	req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
-	subDomains = req.body.subDomain.split( ',' );
+	if ( req.body.subDomain ) {
+		req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
+		subDomains = req.body.subDomain.split( ',' );
+	}
 
 	User.create( {
 		username: req.body.username,
@@ -44,8 +46,10 @@ router.put( '/signup', verifyJwt, function( req, res, next ) {
 		return handleError( res, 'No user to update', 'Invalid input', 400 );
 	}
 
-	req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
-	subDomains = req.body.subDomain.split( ',' );
+	if ( req.body.subDomain ) {
+		req.body.subDomain = req.body.subDomain.replace( /\s/g, '' );
+		subDomains = req.body.subDomain.split( ',' );
+	}
 
 	user.chlngUname = req.body.chlngUname;
 	user.chlngKey = req.body.chlngKey;

@@ -7,6 +7,7 @@ export class ResponseService {
   constructor() { }
 
   handleResponse( response: any ) {
-  	this.responseOccured.emit( JSON.parse( response._body ).message );
+  	response = response.json();
+  	this.responseOccured.emit( response.message );
   }
 }

@@ -3,10 +3,12 @@
 	*ngIf="tournament.streamMatches.length > 0"
 	class="row">
 	<div 
-		*ngFor="let match of tournament.streamMatches; let i = index" 
+		*ngFor="let match of tournament.streamMatches" 
 		class="col-md-3 col-lg-3 text-center">
-		<div class="match">
-			<h3>Stream {{ i + 1 }}</h3>
+		<div
+			*ngIf="match != null"
+			class="match">
+			<h3>Stream {{ match.pos + 1 }}</h3>
 			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
 			<a *ngIf="isLoggedIn()" class="btn btn-warning" (click)="unStream(match)">Remove</a>
@@ -17,10 +19,10 @@
 	*ngIf="tournament.liveMatches.length > 0"
 	class="row">
 	<div 
-		*ngFor="let match of tournament.liveMatches; let i = index" 
+		*ngFor="let match of tournament.liveMatches" 
 		class="col-md-3 col-lg-3 text-center">
 		<div class="match">
-			<h3>Setup {{ i + 1 }}</h3>
+			<h3>Setup {{ match.pos + 1 }}</h3>
 			<h5><strong>{{ match.player1.name }}</strong> vs <strong>{{ match.player2.name }}</strong></h5>
 			<a *ngIf="isLoggedIn()" class="btn btn-danger" (click)="select(match)">Report</a>
 			<a *ngIf="isLoggedIn() && tournament.streamMatches.length < tournament.streams" class="btn btn-info" (click)="stream(match)">Stream</a>

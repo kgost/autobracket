@@ -69,7 +69,7 @@ export class AuthService {
 		var data = response.json();
 		localStorage.setItem( 'token', data.token );
 		localStorage.setItem( 'user', data.user );
-		this.responseService.handleResponse( data.message );
+		this.responseService.handleResponse( response );
 	}
 
 	private getToken() {
@@ -80,7 +80,7 @@ export class AuthService {
 	}
 
 	private handleError( error: any ) {
-		this.errorService.handleError( JSON.parse( error._body ).error );
+		this.errorService.handleError( error );
 		if ( error.status == 400 || error.status == 400 ) {
 			this.router.navigateByUrl( '/admin/login' );
 		}

@@ -12,13 +12,19 @@ var tournamentSchema = new Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Match'
 	}],
-	liveMatches: [{ 
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Match'
+	liveMatches: [{
+		pos: Number,
+		match: { 
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Match'
+		}
 	}],
 	streamMatches: [{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Match'
+		pos: Number,
+		match: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Match'
+		}
 	}],
 	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
