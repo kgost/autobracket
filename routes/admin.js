@@ -178,7 +178,7 @@ router.get( '/', verifyJwt, function( req, res, next ) {
 		try {
 			body = JSON.parse( body );
 		} catch ( e ) {
-			return handleError( res, 'Failed to get tournaments', 'Invalid challonge credentials' );
+			return handleError( res, 'Failed to get tournaments', 'Invalid challonge credentials, please update your settings.' );
 		}
 		body.forEach( function( item ) {
 			if ( item.tournament.state == 'underway' || item.tournament.state == 'awaiting_review' ) {
